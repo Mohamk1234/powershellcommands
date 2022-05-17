@@ -1,0 +1,367 @@
+#getting contents from a file
+
+Command : 
+Get-Content -Path D:\powershellcommands\links.txt
+
+Output : 
+https://github.com/Mohamk1234
+www.google.com
+www.instagram.com
+www.facebook.com
+
+#storing things in variables
+
+Command : $links = Get-Content -Path D:\powershellcommands\links.txt
+
+#looping using foreach
+
+Command : $links | ForEach-Object {
+  Write-Host "Hostname: $($_)" -BackgroundColor white -ForegroundColor black
+}
+
+Output: 
+$links | ForEach-Object {
+  Write-Host "Hostname: $($_)" -BackgroundColor white -ForegroundColor black
+}
+Hostname: https://github.com/Mohamk1234
+Hostname: www.google.com
+Hostname: www.instagram.com
+Hostname: www.facebook.com
+
+#writing to a file 
+
+Command : $links | ForEach-Object {
+  "Hostname: $($_)" | Out-File outhost.txt -Append
+}
+
+#performing simple ping 
+
+Command : $links | ForEach-Object {
+  Test-NetConnection -ComputerName $_ 
+}
+
+Output: 
+$links | ForEach-Object {
+  Test-NetConnection -ComputerName $_ 
+}
+WARNING: Name resolution of https://github.com/Mohamk1234 failed
+
+
+ComputerName   : https://github.com/Mohamk1234
+RemoteAddress  : 
+InterfaceAlias : 
+SourceAddress  : 
+PingSucceeded  : False
+
+ComputerName           : www.google.com
+RemoteAddress          : 142.250.206.164
+InterfaceAlias         : Wi-Fi
+SourceAddress          : 192.168.1.105
+PingSucceeded          : True
+PingReplyDetails (RTT) : 53 ms
+
+ComputerName           : www.instagram.com
+RemoteAddress          : 31.13.79.174
+InterfaceAlias         : Wi-Fi
+SourceAddress          : 192.168.1.105
+PingSucceeded          : True
+PingReplyDetails (RTT) : 26 ms
+
+ComputerName           : www.facebook.com
+RemoteAddress          : 31.13.79.35
+InterfaceAlias         : Wi-Fi
+SourceAddress          : 192.168.1.105
+PingSucceeded          : True
+PingReplyDetails (RTT) : 28 ms
+
+
+#if you want more information do the following
+
+Commands :
+$hoststatus = Test-NetConnection -ComputerName www.google.com
+$hoststatus | select *
+
+Output : 
+ComputerName             : www.google.com
+RemoteAddress            : 142.250.194.68
+ResolvedAddresses        : {142.250.194.68}
+PingSucceeded            : True
+PingReplyDetails         : System.Net.NetworkInformation.PingReply
+TcpClientSocket          : 
+TcpTestSucceeded         : False
+RemotePort               : 0
+TraceRoute               : 
+Detailed                 : False
+InterfaceAlias           : Wi-Fi
+InterfaceIndex           : 20
+InterfaceDescription     : Realtek 8822BE Wireless LAN 802.11ac PCI-E NIC
+NetAdapter               : MSFT_NetAdapter (CreationClassName = "MSFT_NetAdapter", DeviceID = 
+                           "{AF02BC84-D252-4611-8C6E-65FD834681A8}", SystemCreationClassName = "CIM_NetworkPort", SystemName = 
+                           "Mohammad")
+NetRoute                 : MSFT_NetRoute (InstanceID = ":8:8:8:9:55?:55;C?8;@B8;8;55;")
+SourceAddress            : 192.168.1.105
+NameResolutionSucceeded  : True
+BasicNameResolution      : {Microsoft.DnsClient.Commands.DnsRecord_AAAA, Microsoft.DnsClient.Commands.DnsRecord_A}
+LLMNRNetbiosRecords      : {}
+DNSOnlyRecords           : {Microsoft.DnsClient.Commands.DnsRecord_AAAA, Microsoft.DnsClient.Commands.DnsRecord_A}
+AllNameResolutionResults : {Microsoft.DnsClient.Commands.DnsRecord_A, Microsoft.DnsClient.Commands.DnsRecord_AAAA}
+IsAdmin                  : False
+NetworkIsolationContext  : Internet
+MatchingIPsecRules       : 
+
+#checking if certain ports are working or not 
+
+Command : $links | ForEach-Object {
+    
+    Test-NetConnection -ComputerName $_ -Port 443
+    Test-NetConnection -ComputerName $_ -Port 80
+    write-Host ""
+
+}
+
+Output: 
+
+$links | ForEach-Object {
+    
+    Test-NetConnection -ComputerName $_ -Port 443
+    Test-NetConnection -ComputerName $_ -Port 80
+    write-Host ""
+
+}
+
+
+WARNING: Name resolution of https://github.com/Mohamk1234 failed
+
+
+ComputerName   : https://github.com/Mohamk1234
+RemoteAddress  : 
+InterfaceAlias : 
+SourceAddress  : 
+PingSucceeded  : False
+
+WARNING: Name resolution of https://github.com/Mohamk1234 failed
+ComputerName   : https://github.com/Mohamk1234
+RemoteAddress  : 
+InterfaceAlias : 
+SourceAddress  : 
+PingSucceeded  : False
+
+
+ComputerName     : www.google.com
+RemoteAddress    : 142.250.194.68
+RemotePort       : 443
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+ComputerName     : www.google.com
+RemoteAddress    : 142.250.194.68
+RemotePort       : 80
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+
+ComputerName     : www.instagram.com
+RemoteAddress    : 157.240.7.174
+RemotePort       : 443
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+ComputerName     : www.instagram.com
+RemoteAddress    : 157.240.7.174
+RemotePort       : 80
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+
+ComputerName     : www.facebook.com
+RemoteAddress    : 157.240.7.35
+RemotePort       : 443
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+ComputerName     : www.facebook.com
+RemoteAddress    : 157.240.7.35
+RemotePort       : 80
+InterfaceAlias   : Wi-Fi
+SourceAddress    : 192.168.1.105
+TcpTestSucceeded : True
+
+
+#using convertto-Json to show additional information on variables 
+
+Command : $links | convertto-Json
+
+Output: 
+[
+    {
+        "value":  "https://github.com/Mohamk1234",
+        "PSPath":  "D:\\powershellcommands\\links.txt",
+        "PSParentPath":  "D:\\powershellcommands",
+        "PSChildName":  "links.txt",
+        "PSDrive":  {
+                        "CurrentLocation":  "powershellcommands",
+                        "Name":  "D",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "D:\\",
+                        "Description":  "Main",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\Mohammad",
+                           "Drives":  "C D"
+                       },
+        "ReadCount":  1
+    },
+    {
+        "value":  "www.google.com",
+        "PSPath":  "D:\\powershellcommands\\links.txt",
+        "PSParentPath":  "D:\\powershellcommands",
+        "PSChildName":  "links.txt",
+        "PSDrive":  {
+                        "CurrentLocation":  "powershellcommands",
+                        "Name":  "D",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "D:\\",
+                        "Description":  "Main",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\Mohammad",
+                           "Drives":  "C D"
+                       },
+        "ReadCount":  2
+    },
+    {
+        "value":  "www.instagram.com",
+        "PSPath":  "D:\\powershellcommands\\links.txt",
+        "PSParentPath":  "D:\\powershellcommands",
+        "PSChildName":  "links.txt",
+        "PSDrive":  {
+                        "CurrentLocation":  "powershellcommands",
+                        "Name":  "D",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "D:\\",
+                        "Description":  "Main",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\Mohammad",
+                           "Drives":  "C D"
+                       },
+        "ReadCount":  3
+    },
+    {
+        "value":  "www.facebook.com",
+        "PSPath":  "D:\\powershellcommands\\links.txt",
+        "PSParentPath":  "D:\\powershellcommands",
+        "PSChildName":  "links.txt",
+        "PSDrive":  {
+                        "CurrentLocation":  "powershellcommands",
+                        "Name":  "D",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "D:\\",
+                        "Description":  "Main",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\Mohammad",
+                           "Drives":  "C D"
+                       },
+        "ReadCount":  4
+    }
+]
+
+
+#Get-Date very useful when logging data 
+
+Command : Get-Date
+
+Output : 
+17 May 2022 13:54:34
+
+Command : (Get-Date).Dayofweek
+
+Output: Tuesday
+
+Command : "$(Get-Date): Testing Host : $($_)" | Out-File log.txt -Append
+
+#using Start-Sleep in case of slow API's or another valid reason
+
+Command  : Start-Sleep -Seconds 10
+
+#Write-Host command useful for logging in command line 
+
+Command: Write-Host -BackgroundColor white -ForegroundColor Black "My name is Mohammad" 
+
+#Get-Command useful in case you want to get a specific command
+
+Command : Get-Command *write*
+
+Output : 
+CommandType     Name                                               Version    Source                                                 
+-----------     ----                                               -------    ------                                                 
+Alias           write -> Write-Output                                                                                                
+Alias           Write-FileSystemCache                              2.0.0.0    Storage                                                
+Function        Write-DtcTransactionsTraceSession                  1.0.0.0    MsDtc                                                  
+Function        Write-PrinterNfcTag                                1.1        PrintManagement                                        
+Function        Write-VolumeCache                                  2.0.0.0    Storage                                                
+Cmdlet          Write-Debug                                        3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Error                                        3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-EventLog                                     3.1.0.0    Microsoft.PowerShell.Management                        
+Cmdlet          Write-Host                                         3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Information                                  3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Output                                       3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Progress                                     3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Verbose                                      3.1.0.0    Microsoft.PowerShell.Utility                           
+Cmdlet          Write-Warning                                      3.1.0.0    Microsoft.PowerShell.Utility                           
+Application     GameBarPresenceWriter.exe                          10.0.19... C:\Windows\system32\GameBarPresenceWriter.exe          
+Application     write.exe                                          10.0.19... C:\Windows\system32\write.exe                          
+Application     write.exe                                          10.0.19... C:\Windows\write.exe   
+
+
+
